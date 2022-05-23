@@ -39,12 +39,27 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public void deleteEmployee(int id) throws ProductWithTheIDDoesntExistException {
-
+    public void deleteProduct(int id) throws ProductWithTheIDDoesntExistException {
+        Optional<Product> optional = productRepo.findById(id);
+        if (optional.isEmpty())
+            throw new ProductWithTheIDDoesntExistException();
+        productRepo.deleteById(id);
     }
 
     @Override
-    public Product updateEmployee(Product product) throws ProductWithTheIDAlreadyExistsException, ProductWithTheIDDoesntExistException {
-        return null;
+    public Product sellProduct(int id) throws ProductWithTheIDDoesntExistException {
+        Optional<Product> optional = productRepo.findById(id);
+        if (optional.isEmpty())
+            throw new ProductWithTheIDDoesntExistException();
+        return productRepo.getReferenceById(id);
+    }
+
+    @Override
+    public Product updateProduct(Product product) throws ProductWithTheIDDoesntExistException {
+        Optional<Product> optional = productRepo.findById(product.getId());
+        if (optional.isPresent()){
+            return productRepo.save(product);
+        }
+        throw new ProductWithTheIDDoesntExistException();
     }
 }
