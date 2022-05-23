@@ -4,6 +4,7 @@ import com.example.sellingbuyingsprang.exceptions.ProductWithTheIDAlreadyExistsE
 import com.example.sellingbuyingsprang.exceptions.ProductWithTheIDDoesntExistException;
 import com.example.sellingbuyingsprang.model.Product;
 import com.example.sellingbuyingsprang.repo.ProductRepo;
+import com.example.sellingbuyingsprang.repo.TransactionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ public class ProductServiceImpl implements ProductService{
 
 
     private ProductRepo productRepo;
-
+    private TransactionRepo transactionRepo;
     @Override
     public List<Product> getAllProducts() {
         return productRepo.findAll();
@@ -52,6 +53,7 @@ public class ProductServiceImpl implements ProductService{
         Optional<Product> optional = productRepo.findById(id);
         if (optional.isEmpty())
             throw new ProductWithTheIDDoesntExistException();
+        transactionRepo.save(productRepo.getReferenceById(id));
         return productRepo.getReferenceById(id);
     }
 

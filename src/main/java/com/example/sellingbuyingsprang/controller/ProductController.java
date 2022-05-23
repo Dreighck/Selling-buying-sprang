@@ -5,6 +5,7 @@ import com.example.sellingbuyingsprang.exceptions.ProductWithTheIDDoesntExistExc
 import com.example.sellingbuyingsprang.model.Product;
 import com.example.sellingbuyingsprang.repo.ProductRepo;
 import com.example.sellingbuyingsprang.service.ProductService;
+import com.example.sellingbuyingsprang.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,8 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+    @Autowired
+    private TransactionService transactionService;
 
     @GetMapping(value = "/products")
     public ResponseEntity<List<Product>> getAllEmployees(){
@@ -53,6 +56,7 @@ public class ProductController {
     @DeleteMapping("/purchase/{prodId}")
     public ResponseEntity<?> sellProductHandler(@PathVariable("prodId") int id) throws ProductWithTheIDDoesntExistException {
         productService.sellProduct(id);
+        transactionService.purchaseProduct(id);
         return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
     }
 
