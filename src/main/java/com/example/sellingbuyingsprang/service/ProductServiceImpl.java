@@ -5,6 +5,7 @@ import com.example.sellingbuyingsprang.exceptions.ProductWithTheIDDoesntExistExc
 import com.example.sellingbuyingsprang.model.Product;
 import com.example.sellingbuyingsprang.repo.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.Optional;
 @Service
 public class ProductServiceImpl implements ProductService{
 
-    @Autowired
+
     private ProductRepo productRepo;
 
     @Override
