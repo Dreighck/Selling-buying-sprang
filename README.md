@@ -2,7 +2,7 @@
 - MicroService - login/register/account
 - MicroService - product/inventory
 - MicroService - website/userprofile/comments
-- ServiceRegistry
+- RgistrationService
 - GatewayService
 ********************************* 
 ### Microservice - 1
