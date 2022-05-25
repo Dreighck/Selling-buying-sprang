@@ -27,7 +27,7 @@ public class ProductController {
         return responseEntity;
     }
 
-    @PostMapping("user/{userID}/list_for_sale")
+    @PostMapping("user/{userID}/products")
     public ResponseEntity<?> addProductHandler(@RequestBody Product product, @PathVariable String userID){
         ResponseEntity<?> responseEntity;
         try {
@@ -40,13 +40,13 @@ public class ProductController {
         }
         return responseEntity;
     }
-    @PutMapping("/products/update")
-    public ResponseEntity<Product> updateProductHandler(@RequestBody Product product) throws ProductWithTheIDDoesntExistException, ProductWithTheIDAlreadyExistsException {
+    @PutMapping("user/{userID}/products")
+    public ResponseEntity<Product> updateProductHandler(@RequestBody Product product, @PathVariable String userID) throws ProductWithTheIDDoesntExistException, ProductWithTheIDAlreadyExistsException {
         Product updatedProduct = productService.updateProduct(product);
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
     }
-    @DeleteMapping("/products/{prodId}/delete")
-    public ResponseEntity<?> deleteProductHandler(@PathVariable("prodId") int id) throws ProductWithTheIDDoesntExistException {
+    @DeleteMapping("/user/{userID}/products/{prodId}")
+    public ResponseEntity<?> deleteProductHandler(@PathVariable("prodId") int id, @PathVariable String userID) throws ProductWithTheIDDoesntExistException {
         productService.removeProduct(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
