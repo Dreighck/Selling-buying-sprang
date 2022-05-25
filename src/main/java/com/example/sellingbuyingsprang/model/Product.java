@@ -16,6 +16,9 @@ public class Product {
 
     private String name;
     private double price;
+    private int qty;
+
+    private String user; //Need to update String to User when get User class
 
     @Nullable
     private String description;
@@ -23,16 +26,26 @@ public class Product {
     public Product() {
     }
 
-    public Product(int id, String name, double price) {
-        this.id = id;
+    public Product(int id, String name, double price, int qty) {
         this.name = name;
         this.price = price;
+        if(id==this.id)
+            this.qty += qty;
+        else {
+            this.qty = qty;
+            this.id = id;
+        }
     }
 
-    public Product(int id, String name, double price, @Nullable String description) {
-        this.id = id;
+    public Product(int id, String name, double price, int qty, @Nullable String description) {
         this.name = name;
         this.price = price;
+        if(id==this.id)
+            this.qty += qty;
+        else {
+            this.qty = qty;
+            this.id = id;
+        }
         this.description = description;
     }
 
@@ -67,6 +80,22 @@ public class Product {
 
     public void setDescription(@Nullable String description) {
         this.description = description;
+    }
+
+    public int getQty() {
+        return qty;
+    }
+
+    public void setQty(int qty) {
+        this.qty = qty;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 }
 

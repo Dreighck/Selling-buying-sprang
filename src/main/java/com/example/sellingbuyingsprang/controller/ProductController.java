@@ -3,9 +3,7 @@ package com.example.sellingbuyingsprang.controller;
 import com.example.sellingbuyingsprang.exceptions.ProductWithTheIDAlreadyExistsException;
 import com.example.sellingbuyingsprang.exceptions.ProductWithTheIDDoesntExistException;
 import com.example.sellingbuyingsprang.model.Product;
-import com.example.sellingbuyingsprang.repo.ProductRepo;
 import com.example.sellingbuyingsprang.service.ProductService;
-import com.example.sellingbuyingsprang.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,44 +18,37 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
-    @Autowired
-    private TransactionService transactionService;
 
     @GetMapping(value = "/products")
-    public ResponseEntity<List<Product>> getAllEmployees(){
+    public ResponseEntity<List<Product>> getAllProduct(){
         List<Product> products = productService.getAllProducts();
         ResponseEntity<List<Product>> responseEntity;
         responseEntity = new ResponseEntity<>(products, HttpStatus.OK);
         return responseEntity;
     }
 
-    @PostMapping("/list_for_sale")
-    public ResponseEntity<?> addProductHandler(@RequestBody Product product){
+    @PostMapping("user/{userID}/list_for_sale")
+    public ResponseEntity<?> addProductHandler(@RequestBody Product product, @PathVariable String userID){
         ResponseEntity<?> responseEntity;
         try {
-            Product prod = productService.addNewProduct(product);
+            Product prod=new Product();
+            prod.setUser(userID);
+            prod = productService.addNewProduct(product);
             responseEntity = new ResponseEntity<>(prod, HttpStatus.CREATED);
         }catch (ProductWithTheIDAlreadyExistsException e){
             responseEntity = new ResponseEntity<>("Failed to store, Duplicate",HttpStatus.CONFLICT);
         }
         return responseEntity;
     }
-    @PutMapping("/update")
+    @PutMapping("/products/update")
     public ResponseEntity<Product> updateProductHandler(@RequestBody Product product) throws ProductWithTheIDDoesntExistException, ProductWithTheIDAlreadyExistsException {
         Product updatedProduct = productService.updateProduct(product);
         return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
     }
-    @DeleteMapping("/delete/{prodId}")
+    @DeleteMapping("/products/{prodId}/delete")
     public ResponseEntity<?> deleteProductHandler(@PathVariable("prodId") int id) throws ProductWithTheIDDoesntExistException {
-        productService.sellProduct(id);
-        return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
-    }
-
-    @DeleteMapping("/purchase/{prodId}")
-    public ResponseEntity<?> sellProductHandler(@PathVariable("prodId") int id) throws ProductWithTheIDDoesntExistException {
-        productService.sellProduct(id);
-        transactionService.purchaseProduct(id);
-        return new ResponseEntity<>(HttpStatus.I_AM_A_TEAPOT);
+        productService.removeProduct(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

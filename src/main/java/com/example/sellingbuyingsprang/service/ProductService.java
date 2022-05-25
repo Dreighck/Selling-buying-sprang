@@ -13,5 +13,7 @@ public interface ProductService {
     Product addNewProduct(Product product) throws ProductWithTheIDAlreadyExistsException;
     void deleteProduct(int id) throws ProductWithTheIDDoesntExistException;
     Product updateProduct(Product product) throws ProductWithTheIDAlreadyExistsException, ProductWithTheIDDoesntExistException;
-    Product sellProduct(int id) throws ProductWithTheIDDoesntExistException;
+    Product addProductToCart(int id) throws ProductWithTheIDDoesntExistException;
+
+    void removeProduct(int id) throws ProductWithTheIDDoesntExistException;
 }

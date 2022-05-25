@@ -4,9 +4,7 @@ import com.example.sellingbuyingsprang.exceptions.ProductWithTheIDAlreadyExistsE
 import com.example.sellingbuyingsprang.exceptions.ProductWithTheIDDoesntExistException;
 import com.example.sellingbuyingsprang.model.Product;
 import com.example.sellingbuyingsprang.repo.ProductRepo;
-import com.example.sellingbuyingsprang.repo.TransactionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,9 +13,9 @@ import java.util.Optional;
 @Service
 public class ProductServiceImpl implements ProductService{
 
-
+    @Autowired
     private ProductRepo productRepo;
-    private TransactionRepo transactionRepo;
+
     @Override
     public List<Product> getAllProducts() {
         return productRepo.findAll();
@@ -49,11 +47,17 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public Product sellProduct(int id) throws ProductWithTheIDDoesntExistException {
+    public Product addProductToCart(int id) throws ProductWithTheIDDoesntExistException {
         Optional<Product> optional = productRepo.findById(id);
         if (optional.isEmpty())
             throw new ProductWithTheIDDoesntExistException();
-        transactionRepo.save(productRepo.getReferenceById(id));
+        Product product = productRepo.findById(id).get();
+        if(product.getQty()==0){
+            System.out.println("No available items");
+            throw new ProductWithTheIDDoesntExistException();
+        }
+        else
+            product.setQty(product.getQty()-1);
         return productRepo.getReferenceById(id);
     }
 
@@ -64,5 +68,13 @@ public class ProductServiceImpl implements ProductService{
             return productRepo.save(product);
         }
         throw new ProductWithTheIDDoesntExistException();
+    }
+
+    @Override
+    public void removeProduct(int id) throws ProductWithTheIDDoesntExistException {
+        Optional<Product> optional = productRepo.findById(id);
+        if (optional.isEmpty())
+            throw new ProductWithTheIDDoesntExistException();
+        productRepo.deleteById(id);
     }
 }
